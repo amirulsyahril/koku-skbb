@@ -24,6 +24,23 @@
 
         <section id="murid" class="bahagian" style="display:none;">
             <h2>Senarai Murid & Unit Kokurikulum</h2>
+
+
+<section id="murid" class="bahagian" style="display:none;">
+    <h2>Senarai Murid & Unit Kokurikulum</h2>
+
+    <div class="borang-container">
+        <h3>Muat Naik Senarai Murid (CSV)</h3>
+        <p>Sila pastikan fail CSV anda mempunyai lajur: <strong>ID_Murid, Nama_Murid, Kelas, Nama_Kelab, Nama_Uniform, Nama_Sukan</strong>.</p>
+        <input type="file" id="failCsv" accept=".csv">
+        <button id="butangMuatNaikCsv">Proses & Muat Naik</button>
+        <div id="statusCsv"></div>
+    </div>
+    <hr>
+    <input type="text" id="carianMurid" onkeyup="cariData('carianMurid', 'jadualMurid')" placeholder="Cari nama murid...">
+    <table id="jadualMurid">
+
+            
             <input type="text" id="carianMurid" onkeyup="cariData('carianMurid', 'jadualMurid')" placeholder="Cari nama murid...">
             <table id="jadualMurid">
                 <thead>
