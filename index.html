@@ -1,0 +1,28 @@
+<section id="laporan" class="bahagian" style="display:none;">
+    <h2>Laporan Aktiviti Mingguan</h2>
+
+    <div class="borang-container">
+        <h3>Tambah Laporan Baru</h3>
+        <form id="borangLaporan">
+            <label for="pilihanUnit">Pilih Unit Kokurikulum:</label>
+            <select id="pilihanUnit" name="pilihanUnit" required>
+                <option value="">-- Sila Pilih Unit --</option>
+                </select>
+
+            <label for="tarikhLaporan">Tarikh Aktiviti:</label>
+            <input type="date" id="tarikhLaporan" name="tarikhLaporan" required>
+
+            <label for="tajukLaporan">Tajuk Aktiviti:</label>
+            <input type="text" id="tajukLaporan" name="tajukLaporan" placeholder="cth: Latihan Kawad Kaki" required>
+
+            <label for="butiranLaporan">Butiran Laporan:</label>
+            <textarea id="butiranLaporan" name="butiranLaporan" rows="5" placeholder="Terangkan aktiviti yang dijalankan..." required></textarea>
+
+            <button type="submit">Hantar Laporan</button>
+            <div id="statusHantar"></div>
+        </form>
+    </div>
+    <hr> <h3>Laporan Sedia Ada</h3>
+    <div id="dataLaporan">
+        </div>
+</section>
