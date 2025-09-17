@@ -184,3 +184,69 @@ document.addEventListener('DOMContentLoaded', () => {
     isiPilihanUnit();
     document.getElementById('borangLaporan').addEventListener('submit', hantarLaporan);
 });
+
+```javascript
+    // Fungsi BARU untuk memproses dan menghantar data CSV
+    async function prosesDanHantarCsv() {
+        const statusDiv = document.getElementById('statusCsv');
+        const failInput = document.getElementById('failCsv');
+        const fail = failInput.files[0];
+
+        if (!fail) {
+            statusDiv.textContent = 'Sila pilih satu fail CSV dahulu.';
+            statusDiv.style.color = 'red';
+            return;
+        }
+
+        statusDiv.textContent = 'Membaca fail...';
+        statusDiv.style.color = '#333';
+
+        const reader = new FileReader();
+
+        reader.onload = async function(event) {
+            try {
+                const teksCsv = event.target.result;
+                const baris = teksCsv.split('\n').filter(baris => baris.trim() !== '');
+                const pengepala = baris.shift().split(',').map(h => h.trim());
+                
+                const dataMurid = baris.map(barisData => {
+                    const nilai = barisData.split(',').map(n => n.trim());
+                    let obj = {};
+                    pengepala.forEach((kunci, i) => {
+                        obj[kunci] = nilai[i];
+                    });
+                    return obj;
+                });
+
+                statusDiv.textContent = `Menghantar ${dataMurid.length} rekod murid...`;
+
+                const dataUntukDihantar = {
+                    action: 'muatNaikCsvMurid', // Pengecam untuk Apps Script
+                    payload: dataMurid
+                };
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(dataUntukDihantar),
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    statusDiv.textContent = `✓ ${result.message}`;
+                    statusDiv.style.color = 'green';
+                    failInput.value = ''; // Reset input fail
+                    paparSenaraiMurid(); // Muat semula jadual murid
+                } else {
+                    throw new Error(result.message);
+                }
+
+            } catch (error) {
+                statusDiv.textContent = `✗ Ralat: ${error.message}`;
+                statusDiv.style.color = 'red';
+            }
+        };
+
+        reader.readAsText(fail);
+    }
+    ```
