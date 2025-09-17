@@ -1,5 +1,5 @@
 // GANTIKAN DENGAN URL WEB APP ANDA DARI LANGKAH 2
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLFW7TRJkGX8FT7z2BuHbqxGUX3lcDOkmS1yiQTyJkRWPBSwHTJOwuPz3iOreCXJb6rQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/library/d/1UzJfNZbC3UmnNv2p1pxeISDQvGIMpa89Q8y1H6ANmStwlaeB_V6e5Ah6/2";
 
 // Fungsi untuk menukar paparan bahagian
 function tunjukBahagian(idBahagian) {
@@ -26,23 +26,19 @@ async function ambilData(namaHelaian) {
 
 // Fungsi untuk memaparkan data murid
 async function paparSenaraiMurid() {
-    // Ambil semua data serentak untuk kecekapan
     const [senaraiMurid, unitKoKu] = await Promise.all([
         ambilData('SenaraiMurid'),
         ambilData('UnitKoKu')
     ]);
-
-    // Cipta 'lookup map' untuk akses pantas nama unit
     const unitMap = unitKoKu.reduce((map, unit) => {
         map[unit.ID_Unit] = unit.Nama_Unit;
         return map;
     }, {});
-
     const tbody = document.getElementById('dataMurid');
-    tbody.innerHTML = ''; // Kosongkan jadual sebelum isi data baru
-    
+    tbody.innerHTML = '<tr><td colspan="5">Memuatkan data...</td></tr>';
+    let content = '';
     senaraiMurid.forEach(murid => {
-        const row = `
+        content += `
             <tr>
                 <td>${murid.Nama_Murid}</td>
                 <td>${murid.Kelas}</td>
@@ -51,8 +47,8 @@ async function paparSenaraiMurid() {
                 <td>${unitMap[murid.ID_Sukan] || 'N/A'}</td>
             </tr>
         `;
-        tbody.innerHTML += row;
     });
+    tbody.innerHTML = content;
 }
 
 // Fungsi untuk memaparkan laporan aktiviti
@@ -61,27 +57,28 @@ async function paparLaporan() {
         ambilData('LaporanAktiviti'),
         ambilData('UnitKoKu')
     ]);
-
     const unitMap = unitKoKu.reduce((map, unit) => {
         map[unit.ID_Unit] = unit.Nama_Unit;
         return map;
     }, {});
-
     const container = document.getElementById('dataLaporan');
-    container.innerHTML = '';
-
-    laporan.sort((a, b) => new Date(b.Tarikh) - new Date(a.Tarikh)); // Susun ikut tarikh terkini
-
+    container.innerHTML = '<p>Memuatkan laporan...</p>';
+    if (laporan.length === 0) {
+        container.innerHTML = '<p>Tiada laporan aktiviti buat masa ini.</p>';
+        return;
+    }
+    laporan.sort((a, b) => new Date(b.Tarikh) - new Date(a.Tarikh));
+    let content = '';
     laporan.forEach(l => {
-        const kad = `
+        content += `
             <div class="laporan-kad">
                 <h3>${l.Tajuk_Aktiviti} - ${unitMap[l.ID_Unit] || 'Unit Tidak Diketahui'}</h3>
                 <p><strong>Tarikh:</strong> ${new Date(l.Tarikh).toLocaleDateString('ms-MY')}</p>
                 <p>${l.Butiran_Laporan}</p>
             </div>
         `;
-        container.innerHTML += kad;
     });
+    container.innerHTML = content;
 }
 
 // Fungsi untuk memaparkan pencapaian
@@ -90,17 +87,15 @@ async function paparPencapaian() {
         ambilData('Pencapaian'),
         ambilData('SenaraiMurid')
     ]);
-
     const muridMap = senaraiMurid.reduce((map, murid) => {
         map[murid.ID_Murid] = murid.Nama_Murid;
         return map;
     }, {});
-    
     const tbody = document.getElementById('dataPencapaian');
-    tbody.innerHTML = '';
-
+    tbody.innerHTML = '<tr><td colspan="5">Memuatkan data...</td></tr>';
+    let content = '';
     pencapaian.forEach(p => {
-        const row = `
+        content += `
             <tr>
                 <td>${muridMap[p.ID_Murid] || 'N/A'}</td>
                 <td>${p.Nama_Pertandingan}</td>
@@ -109,44 +104,14 @@ async function paparPencapaian() {
                 <td>${new Date(p.Tarikh).toLocaleDateString('ms-MY')}</td>
             </tr>
         `;
-        tbody.innerHTML += row;
     });
+    tbody.innerHTML = content;
 }
-
-// Fungsi carian untuk jadual
-function cariData(inputId, tableId) {
-    const input = document.getElementById(inputId);
-    const filter = input.value.toUpperCase();
-    const table = document.getElementById(tableId);
-    const tr = table.getElementsByTagName("tr");
-
-    for (let i = 1; i < tr.length; i++) { // Mula dari 1 untuk langkau header
-        let rowVisible = false;
-        let td = tr[i].getElementsByTagName("td");
-        for (let j = 0; j < td.length; j++) {
-            if (td[j]) {
-                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    rowVisible = true;
-                    break;
-                }
-            }
-        }
-        tr[i].style.display = rowVisible ? "" : "none";
-    }
-}
-
-// Jalankan fungsi-fungsi ini apabila laman web dimuatkan
-document.addEventListener('DOMContentLoaded', () => {
-    paparSenaraiMurid();
-    paparLaporan();
-    paparPencapaian();
-});
 
 // Fungsi BARU untuk mengisi pilihan unit dalam borang
 async function isiPilihanUnit() {
     const unitKoKu = await ambilData('UnitKoKu');
     const select = document.getElementById('pilihanUnit');
-
     unitKoKu.forEach(unit => {
         const option = document.createElement('option');
         option.value = unit.ID_Unit;
@@ -157,45 +122,65 @@ async function isiPilihanUnit() {
 
 // Fungsi BARU untuk menghantar data laporan
 async function hantarLaporan(event) {
-    event.preventDefault(); // Halang borang dari refresh laman
-
+    event.preventDefault();
     const statusDiv = document.getElementById('statusHantar');
     statusDiv.textContent = 'Menghantar...';
-
-    // Kumpul data dari borang
+    statusDiv.style.color = '#333';
     const data = {
-        sheet: 'LaporanAktiviti', // Beritahu Apps Script ke mana nak simpan
+        sheet: 'LaporanAktiviti',
         id_unit: document.getElementById('pilihanUnit').value,
         tarikh: document.getElementById('tarikhLaporan').value,
         tajuk: document.getElementById('tajukLaporan').value,
         butiran: document.getElementById('butiranLaporan').value
     };
-
     try {
-        // Hantar data menggunakan method POST
         const response = await fetch(SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify(data),
         });
-
         const result = await response.json();
-
         if (result.status === 'success') {
             statusDiv.textContent = '✓ Laporan berjaya dihantar!';
             statusDiv.style.color = 'green';
-            document.getElementById('borangLaporan').reset(); // Kosongkan borang
-            paparLaporan(); // Muat semula senarai laporan
+            document.getElementById('borangLaporan').reset();
+            paparLaporan();
         } else {
             throw new Error(result.message);
         }
-
     } catch (error) {
         statusDiv.textContent = `✗ Gagal menghantar: ${error.message}`;
         statusDiv.style.color = 'red';
     }
-
-    // Hilangkan mesej status selepas 5 saat
     setTimeout(() => {
         statusDiv.textContent = '';
     }, 5000);
 }
+
+// Fungsi carian untuk jadual
+function cariData(inputId, tableId) {
+    const input = document.getElementById(inputId);
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById(tableId);
+    const tbody = table.getElementsByTagName("tbody")[0];
+    const tr = tbody.getElementsByTagName("tr");
+    for (let i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            let txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+// Jalankan fungsi-fungsi ini apabila laman web dimuatkan
+document.addEventListener('DOMContentLoaded', () => {
+    paparSenaraiMurid();
+    paparLaporan();
+    paparPencapaian();
+    isiPilihanUnit();
+    document.getElementById('borangLaporan').addEventListener('submit', hantarLaporan);
+});
