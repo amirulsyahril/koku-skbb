@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #0056b3;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    padding: 0.5rem;
+}
+nav button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+nav button:hover {
+    background-color: #0056b3;
+}
+main {
+    padding: 20px;
+}
+.bahagian {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #0056b3;
+    color: white;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+.laporan-kad {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.laporan-kad h3 {
+    margin-top: 0;
+}
