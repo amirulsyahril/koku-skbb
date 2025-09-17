@@ -1,28 +1,100 @@
-<section id="laporan" class="bahagian" style="display:none;">
-    <h2>Laporan Aktiviti Mingguan</h2>
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kokurikulum SK Bohor Baharu 2025</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Dashboard Kokurikulum SK Bohor Baharu 2025</h1>
+    </header>
+    <nav>
+        <button onclick="tunjukBahagian('utama')">Halaman Utama</button>
+        <button onclick="tunjukBahagian('murid')">Senarai Murid</button>
+        <button onclick="tunjukBahagian('laporan')">Laporan Aktiviti</button>
+        <button onclick="tunjukBahagian('pencapaian')">Pencapaian Murid</button>
+    </nav>
+    <main>
+        <section id="utama" class="bahagian">
+            <h2>Selamat Datang ke Dashboard Kokurikulum</h2>
+            <p>Sila pilih menu di atas untuk melihat maklumat atau menghantar laporan aktiviti.</p>
+        </section>
 
-    <div class="borang-container">
-        <h3>Tambah Laporan Baru</h3>
-        <form id="borangLaporan">
-            <label for="pilihanUnit">Pilih Unit Kokurikulum:</label>
-            <select id="pilihanUnit" name="pilihanUnit" required>
-                <option value="">-- Sila Pilih Unit --</option>
-                </select>
+        <section id="murid" class="bahagian" style="display:none;">
+            <h2>Senarai Murid & Unit Kokurikulum</h2>
+            <input type="text" id="carianMurid" onkeyup="cariData('carianMurid', 'jadualMurid')" placeholder="Cari nama murid...">
+            <table id="jadualMurid">
+                <thead>
+                    <tr>
+                        <th>Nama Murid</th>
+                        <th>Kelas</th>
+                        <th>Kelab/Persatuan</th>
+                        <th>Unit Beruniform</th>
+                        <th>Sukan/Permainan</th>
+                    </tr>
+                </thead>
+                <tbody id="dataMurid">
+                    </tbody>
+            </table>
+        </section>
 
-            <label for="tarikhLaporan">Tarikh Aktiviti:</label>
-            <input type="date" id="tarikhLaporan" name="tarikhLaporan" required>
+        <section id="laporan" class="bahagian" style="display:none;">
+            <h2>Laporan Aktiviti Mingguan</h2>
 
-            <label for="tajukLaporan">Tajuk Aktiviti:</label>
-            <input type="text" id="tajukLaporan" name="tajukLaporan" placeholder="cth: Latihan Kawad Kaki" required>
+            <div class="borang-container">
+                <h3>Tambah Laporan Baru</h3>
+                <form id="borangLaporan">
+                    <label for="pilihanUnit">Pilih Unit Kokurikulum:</label>
+                    <select id="pilihanUnit" name="pilihanUnit" required>
+                        <option value="">-- Sila Pilih Unit --</option>
+                        </select>
 
-            <label for="butiranLaporan">Butiran Laporan:</label>
-            <textarea id="butiranLaporan" name="butiranLaporan" rows="5" placeholder="Terangkan aktiviti yang dijalankan..." required></textarea>
+                    <label for="tarikhLaporan">Tarikh Aktiviti:</label>
+                    <input type="date" id="tarikhLaporan" name="tarikhLaporan" required>
 
-            <button type="submit">Hantar Laporan</button>
-            <div id="statusHantar"></div>
-        </form>
-    </div>
-    <hr> <h3>Laporan Sedia Ada</h3>
-    <div id="dataLaporan">
-        </div>
-</section>
+                    <label for="tajukLaporan">Tajuk Aktiviti:</label>
+                    <input type="text" id="tajukLaporan" name="tajukLaporan" placeholder="cth: Latihan Kawad Kaki" required>
+
+                    <label for="butiranLaporan">Butiran Laporan:</label>
+                    <textarea id="butiranLaporan" name="butiranLaporan" rows="5" placeholder="Terangkan aktiviti yang dijalankan..." required></textarea>
+
+                    <button type="submit">Hantar Laporan</button>
+                    <div id="statusHantar"></div>
+                </form>
+            </div>
+            
+            <hr>
+
+            <h3>Laporan Sedia Ada</h3>
+            <div id="dataLaporan">
+                </div>
+        </section>
+
+        <section id="pencapaian" class="bahagian" style="display:none;">
+            <h2>Rekod Penyertaan & Pencapaian Murid</h2>
+             <input type="text" id="carianPencapaian" onkeyup="cariData('carianPencapaian', 'jadualPencapaian')" placeholder="Cari nama murid atau pertandingan...">
+            <table id="jadualPencapaian">
+                <thead>
+                    <tr>
+                        <th>Nama Murid</th>
+                        <th>Pertandingan</th>
+                        <th>Peringkat</th>
+                        <th>Pencapaian</th>
+                        <th>Tarikh</th>
+                    </tr>
+                </thead>
+                <tbody id="dataPencapaian">
+                    </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SK Bohor Baharu. Dikuasakan oleh Guru-guru Penasihat Kokurikulum.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
