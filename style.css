@@ -31,6 +31,8 @@ nav button:hover {
 }
 main {
     padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 .bahagian {
     background-color: white;
@@ -67,7 +69,65 @@ input[type="text"] {
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 5px;
+    background-color: #fff;
 }
 .laporan-kad h3 {
     margin-top: 0;
+}
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 30px 0;
+}
+
+/* Gaya untuk Borang Laporan */
+.borang-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.borang-container h3 {
+    margin-top: 0;
+}
+#borangLaporan label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+#borangLaporan input[type="text"],
+#borangLaporan input[type="date"],
+#borangLaporan select,
+#borangLaporan textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+#borangLaporan button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 16px;
+}
+#borangLaporan button:hover {
+    background-color: #218838;
+}
+#statusHantar {
+    margin-top: 10px;
+    font-weight: bold;
 }
