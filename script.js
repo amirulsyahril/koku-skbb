@@ -141,3 +141,61 @@ document.addEventListener('DOMContentLoaded', () => {
     paparLaporan();
     paparPencapaian();
 });
+
+// Fungsi BARU untuk mengisi pilihan unit dalam borang
+async function isiPilihanUnit() {
+    const unitKoKu = await ambilData('UnitKoKu');
+    const select = document.getElementById('pilihanUnit');
+
+    unitKoKu.forEach(unit => {
+        const option = document.createElement('option');
+        option.value = unit.ID_Unit;
+        option.textContent = `${unit.Nama_Unit} (${unit.Kategori})`;
+        select.appendChild(option);
+    });
+}
+
+// Fungsi BARU untuk menghantar data laporan
+async function hantarLaporan(event) {
+    event.preventDefault(); // Halang borang dari refresh laman
+
+    const statusDiv = document.getElementById('statusHantar');
+    statusDiv.textContent = 'Menghantar...';
+
+    // Kumpul data dari borang
+    const data = {
+        sheet: 'LaporanAktiviti', // Beritahu Apps Script ke mana nak simpan
+        id_unit: document.getElementById('pilihanUnit').value,
+        tarikh: document.getElementById('tarikhLaporan').value,
+        tajuk: document.getElementById('tajukLaporan').value,
+        butiran: document.getElementById('butiranLaporan').value
+    };
+
+    try {
+        // Hantar data menggunakan method POST
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            statusDiv.textContent = '✓ Laporan berjaya dihantar!';
+            statusDiv.style.color = 'green';
+            document.getElementById('borangLaporan').reset(); // Kosongkan borang
+            paparLaporan(); // Muat semula senarai laporan
+        } else {
+            throw new Error(result.message);
+        }
+
+    } catch (error) {
+        statusDiv.textContent = `✗ Gagal menghantar: ${error.message}`;
+        statusDiv.style.color = 'red';
+    }
+
+    // Hilangkan mesej status selepas 5 saat
+    setTimeout(() => {
+        statusDiv.textContent = '';
+    }, 5000);
+}
